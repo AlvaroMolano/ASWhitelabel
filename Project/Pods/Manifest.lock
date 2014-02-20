@@ -1,0 +1,14 @@
+PODS:
+  - ASWhitelabel (0.1.0)
+
+DEPENDENCIES:
+  - ASWhitelabel (from `../ASWhitelabel.podspec`)
+
+EXTERNAL SOURCES:
+  ASWhitelabel:
+    :path: ../ASWhitelabel.podspec
+
+SPEC CHECKSUMS:
+  ASWhitelabel: 348e9488b310c14ad89511b103f989e31d562a29
+
+COCOAPODS: 0.28.0
