@@ -1,0 +1,7 @@
+pod "ASWhitelabel", :path => "../ASWhitelabel.podspec"
+
+target "Demo" do
+end
+
+target "DemoTests" do
+end
