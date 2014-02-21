@@ -7,16 +7,18 @@ To run the example project; clone the repo, and run `pod install` from the Proje
 
 Showing ASWhiteLabelViewController within your application for your venue (id = 1).
 
-	```objectivec
-	ASWhitelabelViewController *viewController = [[ASWhitelabelViewController alloc] initWithVenueID:1 delegate:self];
-    [self presentViewController:viewController animated:YES completion:nil];
+```objective-c
+ASWhitelabelViewController *viewController = [[ASWhitelabelViewController alloc] initWithVenueID:1 delegate:self];
+[self presentViewController:viewController animated:YES completion:nil];
+```
     
 When a user is finished using AirService the following delegate will be called
-	```objectivec
-	- (void)ASWhitelabelViewControllerDidRequestExit:(ASWhitelabelViewController *)viewController
-	{
-		[self dismissViewControllerAnimated:YES completion:nil];
-	}
+```objective-c
+- (void)ASWhitelabelViewControllerDidRequestExit:(ASWhitelabelViewController *)viewController
+{
+	[self dismissViewControllerAnimated:YES completion:nil];
+}
+```
 
 ## Installation
 
