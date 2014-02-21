@@ -2,7 +2,6 @@ Pod::Spec.new do |s|
   s.name             = "ASWhitelabel"
   s.version          = "0.1.0"
   s.summary          = "Implement a whitelabel version of AirService in your app"
-  s.description      = "Implement a whitelabel version of AirService in your app"
   s.homepage         = "http://www.airservice.com"
   s.license          = 'MIT'
   s.author           = { "danielbowden" => "github@bowden.in" }
@@ -13,7 +12,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Classes'
-  s.resources = 'Assets'
 
   s.public_header_files = 'Classes/*.h'
 end
