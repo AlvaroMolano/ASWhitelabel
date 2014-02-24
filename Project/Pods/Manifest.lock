@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../ASWhitelabel.podspec
 
 SPEC CHECKSUMS:
-  ASWhitelabel: 348e9488b310c14ad89511b103f989e31d562a29
+  ASWhitelabel: 57449dfd971ab148a8554a614d723c5e78dd6a6d
 
 COCOAPODS: 0.28.0

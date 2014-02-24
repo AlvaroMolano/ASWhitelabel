@@ -1,12 +1,17 @@
 //
 //  ASWhitelabelViewController.m
-//  
+//
 //
 //  Created by Daniel Bowden on 20/02/2014.
 //
 //
 
 #import "ASWhitelabelViewController.h"
+
+NS_ENUM(NSInteger, ASAlertViewType)
+{
+    ASAlertViewTypeError
+};
 
 @interface ASWhitelabelViewController ()
 
@@ -16,26 +21,16 @@
 
 - (void)loadWhitelabel;
 - (void)exitWhiteLabel;
+- (NSURL *)environmentURL;
 
 @end
 
-NSString static *const kASWhitelabelBaseURL = @"https://qa.whitelabel.airservice.com";
+NSString static *const kASWhitelabelUrlQA = @"https://qa.whitelabel.airservice.com";
+NSString static *const kASWhitelabelUrlStaging = @"https://staging.whitelabel.airservice.com";
+NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
 
-NS_ENUM(NSInteger, ASAlertViewType)
-{
-    ASAlertViewTypeError
-};
 
 @implementation ASWhitelabelViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (id)initWithVenueID:(NSInteger)vID delegate:(id<ASWhitelabelDelegate>)dlg
 {
@@ -45,6 +40,7 @@ NS_ENUM(NSInteger, ASAlertViewType)
     {
         _venueID = vID;
         _delegate = dlg;
+        _environment = ASEnvironmentProduction;
     }
     
     return self;
@@ -54,11 +50,6 @@ NS_ENUM(NSInteger, ASAlertViewType)
 {
     self.view = self.webView;
     [self loadWhitelabel];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -73,8 +64,7 @@ NS_ENUM(NSInteger, ASAlertViewType)
 
 - (void)loadWhitelabel
 {
-//    NSString *urlString = [NSString stringWithFormat:@"%@/%d", kASWhitelabelBaseURL, self.venueID]; TODO: Implement when this is available
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kASWhitelabelBaseURL] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:25.0];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[self environmentURL] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:25.0];
     [self.webView loadRequest:request];
 }
 
@@ -83,6 +73,28 @@ NS_ENUM(NSInteger, ASAlertViewType)
     if (self.delegate && [self.delegate respondsToSelector:@selector(ASWhitelabelViewControllerDidRequestExit:)])
     {
         [self.delegate ASWhitelabelViewControllerDidRequestExit:self];
+    }
+}
+
+- (NSURL *)environmentURL
+{
+    //    NSString *urlString = [NSString stringWithFormat:@"%@/%d", kASWhitelabelBaseURL, self.venueID]; TODO: Implement specific venueID url when this is available
+    
+    switch (self.environment)
+    {
+        case ASEnvironmentProduction:
+            return [NSURL URLWithString:kASWhitelabelUrl];
+            break;
+        case ASEnvironmentStaging:
+            return [NSURL URLWithString:kASWhitelabelUrlStaging];
+            break;
+        case ASEnvironmentQA:
+            return [NSURL URLWithString:kASWhitelabelUrlQA];
+            break;
+            
+        default:
+            return [NSURL URLWithString:kASWhitelabelUrl];
+            break;
     }
 }
 
@@ -132,11 +144,6 @@ NS_ENUM(NSInteger, ASAlertViewType)
             [self loadWhitelabel];
         }
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle

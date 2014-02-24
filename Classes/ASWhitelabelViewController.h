@@ -8,10 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, ASEnvironment)
+{
+    ASEnvironmentQA,
+    ASEnvironmentStaging,
+    ASEnvironmentProduction
+};
+
 @protocol ASWhitelabelDelegate;
 
 @interface ASWhitelabelViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate>
 
+@property (nonatomic, assign) ASEnvironment environment;
 - (id)initWithVenueID:(NSInteger)venueID delegate:(id<ASWhitelabelDelegate>)delegate;
 
 @end
