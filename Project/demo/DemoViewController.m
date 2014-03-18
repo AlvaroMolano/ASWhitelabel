@@ -42,7 +42,10 @@
 
 - (void)showWhiteLabel
 {
-    ASWhitelabelViewController *viewController = [[ASWhitelabelViewController alloc] initWithVenueID:1 delegate:self];
+    ASWhitelabelViewController *viewController = [[ASWhitelabelViewController alloc] initWithAppID:@"ABC" appToken:@"123" delegate:self];
+    
+    viewController.venueAlias = @"airservice-live"; //our demo venue
+    
     [self presentViewController:viewController animated:YES completion:nil];
 }
 

@@ -17,11 +17,11 @@ NS_ENUM(NSInteger, ASAlertViewType)
 
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, weak) id<ASWhitelabelDelegate> delegate;
-@property (nonatomic, assign) NSInteger venueID;
 
 - (void)loadWhitelabel;
 - (void)exitWhiteLabel;
-- (NSURL *)environmentURL;
+- (NSString *)environmentURLString;
+- (NSURL *)urlWithString:(NSString *)str path:(NSString *)path queryParams:(NSDictionary *)params;
 
 @end
 
@@ -32,15 +32,17 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
 
 @implementation ASWhitelabelViewController
 
-- (id)initWithVenueID:(NSInteger)vID delegate:(id<ASWhitelabelDelegate>)dlg
+- (id)initWithAppID:(NSString *)aID appToken:(NSString *)aToken delegate:(id<ASWhitelabelDelegate>)dlg
 {
     self = [super init];
     
     if (self)
     {
-        _venueID = vID;
+        _appID = aID;
+        _appToken = aToken;
         _delegate = dlg;
         _environment = ASEnvironmentProduction;
+        _loggingEnabled = NO;
     }
     
     return self;
@@ -64,7 +66,26 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
 
 - (void)loadWhitelabel
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[self environmentURL] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:25.0];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+
+    if (self.filter)
+    {
+        params[@"collection"] = self.filter;
+    }
+    
+    if (self.brandColor)
+    {
+        params[@"default_color"] = self.brandColor;
+    }
+    
+    if (self.venueAlias)
+    {
+        params[@"app_type"] = @"venue";
+    }
+    
+    NSURL *url = [self urlWithString:[self environmentURLString] path:self.venueAlias queryParams:params];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:25.0];
     [self.webView loadRequest:request];
 }
 
@@ -76,31 +97,68 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
     }
 }
 
-- (NSURL *)environmentURL
+- (NSString *)environmentURLString
 {
-    //    NSString *urlString = [NSString stringWithFormat:@"%@/%d", kASWhitelabelBaseURL, self.venueID]; TODO: Implement specific venueID url when this is available
-    
     switch (self.environment)
     {
         case ASEnvironmentProduction:
-            return [NSURL URLWithString:kASWhitelabelUrl];
+            return kASWhitelabelUrl;
             break;
         case ASEnvironmentStaging:
-            return [NSURL URLWithString:kASWhitelabelUrlStaging];
+            return kASWhitelabelUrlStaging;
             break;
         case ASEnvironmentQA:
-            return [NSURL URLWithString:kASWhitelabelUrlQA];
+            return kASWhitelabelUrlQA;
             break;
             
         default:
-            return [NSURL URLWithString:kASWhitelabelUrl];
+            return kASWhitelabelUrl;
             break;
     }
 }
 
+- (NSURL *)urlWithString:(NSString *)urlString path:(NSString *)path queryParams:(NSDictionary *)params
+{
+    NSMutableString *finalUrlString = [[NSMutableString alloc] initWithString:urlString];
+    
+    if (path)
+    {
+        [finalUrlString appendFormat:@"/%@", path];
+    }
+
+    if (params)
+    {
+        for (NSString *key in params)
+        {
+            NSString *value = params[key];
+            
+            if (value)
+            {
+                // Do we need to add ?k=v or &k=v ?
+                if ([finalUrlString rangeOfString:@"?"].location==NSNotFound)
+                {
+                    [finalUrlString appendFormat:@"?%@=%@", key, [self urlEscape:value]];
+                }
+                else
+                {
+                    [finalUrlString appendFormat:@"&%@=%@", key, [self urlEscape:value]];
+                }
+            }
+        }
+    }
+    
+    return [NSURL URLWithString:finalUrlString];
+}
+
+- (NSString *)urlEscape:(NSString *)rawString
+{
+    return [rawString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+}
+
 - (UIWebView *)webView
 {
-    if(!_webView) {
+    if(!_webView)
+    {
         _webView = [[UIWebView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         _webView.delegate = self;
         _webView.scrollView.bounces = NO;
@@ -113,6 +171,11 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
 
 - (BOOL)webView:(UIWebView *)theWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    if (self.loggingEnabled)
+    {
+        NSLog(@"ASWhitelabel - shouldStartLoadWithRequest: %@", [[request URL] absoluteString]);
+    }
+    
     if ([[[request URL] absoluteString] isEqualToString:@"AS://exit"])
     {
         [self exitWhiteLabel];
@@ -122,8 +185,21 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
     return YES;
 }
 
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    if (self.loggingEnabled)
+    {
+        NSLog(@"ASWhitelabel - didFinishLoad");
+    }
+}
+
 - (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    if (self.loggingEnabled)
+    {
+        NSLog(@"ASWhitelabel - didFailLoadWithError: %@", [error localizedDescription]);
+    }
+    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops" message:@"There was a problem loading AirService" delegate:self cancelButtonTitle:@"Exit" otherButtonTitles:@"Retry", nil];
     alert.tag = ASAlertViewTypeError;
     [alert show];
