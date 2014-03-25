@@ -67,6 +67,16 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
 - (void)loadWhitelabel
 {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    
+    if (self.appID)
+    {
+        params[@"app_id"] = self.appID;
+    }
+    
+    if (self.appToken)
+    {
+        params[@"app_token"] = self.appToken;
+    }
 
     if (self.filter)
     {
