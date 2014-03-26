@@ -78,17 +78,17 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
         params[@"app_token"] = self.appToken;
     }
 
-    if (self.filter)
+    if (self.filter && self.filter.length)
     {
         params[@"collection"] = self.filter;
     }
     
-    if (self.brandColor)
+    if (self.brandColor && self.brandColor.length)
     {
         params[@"default_color"] = self.brandColor;
     }
     
-    if (self.venueAlias)
+    if (self.venueAlias && self.venueAlias.length)
     {
         params[@"app_type"] = @"venue";
     }
