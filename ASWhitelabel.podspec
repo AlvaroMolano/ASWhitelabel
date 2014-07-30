@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ASWhitelabel"
-  s.version          = "0.3.2"
+  s.version          = "0.4.0"
   s.summary          = "Implement a whitelabel version of AirService in your app"
   s.homepage         = "http://www.airservice.com"
   s.license          = 'MIT'
