@@ -92,6 +92,23 @@ NSString static *const kASWhitelabelUrl = @"https://whitelabel.airservice.com";
     {
         params[@"app_type"] = @"venue";
     }
+
+    if (self.appName && self.appName.length)
+    {
+        params[@"name"] = self.appName;
+    }
+    
+    if (self.appIdentifier && self.appIdentifier.length)
+    {
+        params[@"app_identifier"] = self.appIdentifier;
+    }
+    
+    if (self.appStoreID && self.appStoreID.length)
+    {
+        params[@"app_store_id"] = self.appStoreID;
+    }
+    
+    params[@"platform"] = @"ios";
     
     NSURL *url = [self urlWithString:[self environmentURLString] path:self.venueAlias queryParams:params];
     

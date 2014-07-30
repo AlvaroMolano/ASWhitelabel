@@ -25,6 +25,9 @@ typedef NS_ENUM(NSInteger, ASEnvironment)
 @property (nonatomic, strong) NSString *venueAlias;
 @property (nonatomic, strong) NSString *filter;
 @property (nonatomic, strong) NSString *brandColor;
+@property (nonatomic, strong) NSString *appName;
+@property (nonatomic, strong) NSString *appStoreID;
+@property (nonatomic, strong) NSString *appIdentifier;
 @property (nonatomic, assign) BOOL loggingEnabled;
 
 - (id)initWithAppID:(NSString *)appID appToken:(NSString *)appToken delegate:(id<ASWhitelabelDelegate>)delegate;
