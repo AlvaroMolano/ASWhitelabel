@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, ASEnvironment)
 @property (nonatomic, strong) NSString *appName;
 @property (nonatomic, strong) NSString *appStoreID;
 @property (nonatomic, strong) NSString *appIdentifier;
+@property (nonatomic, strong) NSArray *customParameters;
 @property (nonatomic, assign) BOOL loggingEnabled;
 @property (nonatomic, strong, readonly) UIWebView *webView;
 
