@@ -15,7 +15,7 @@ NS_ENUM(NSInteger, ASAlertViewType)
 
 @interface ASWhitelabelViewController ()
 
-@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, strong, readwrite) UIWebView *webView;
 @property (nonatomic, weak) id<ASWhitelabelDelegate> delegate;
 
 - (void)loadWhitelabel;

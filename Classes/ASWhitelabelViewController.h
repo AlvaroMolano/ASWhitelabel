@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, ASEnvironment)
 @property (nonatomic, strong) NSString *appStoreID;
 @property (nonatomic, strong) NSString *appIdentifier;
 @property (nonatomic, assign) BOOL loggingEnabled;
+@property (nonatomic, strong, readonly) UIWebView *webView;
 
 - (id)initWithAppID:(NSString *)appID appToken:(NSString *)appToken delegate:(id<ASWhitelabelDelegate>)delegate;
 
