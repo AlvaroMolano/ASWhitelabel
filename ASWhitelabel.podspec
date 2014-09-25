@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage         = "http://www.airservice.com"
   s.license          = 'MIT'
   s.author           = { "danielbowden" => "github@bowden.in" }
-  s.source           = { :git => "https://github.com/airservice/ASWhitelabel.git", :tag => s.version.to_s }
+  s.source           = { :git => "git@github.com:airservice/ASWhitelabel.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '7.0'
   s.ios.deployment_target = '7.0'
